@@ -56,11 +56,10 @@ Every command starts with a ``\`` character.
 | ``\r <FILENAME>``      | Reads statements from ``<FILENAME>`` and execute    |
 |                        | them.                                               |
 +------------------------+-----------------------------------------------------+
-| ``\shards [VIEW]``     | Queries ``sys.shards`` table and computes relocation|
-|                        | progress progress per table. If ``VIEW`` is instead:|
+| ``\shards [MODE]``     | Queries ``sys.shards`` table shows an overview on   |
+|                        | the state of all shards. Providing ``MODE``  shows: |
 |                        |                                                     |
-|                        | - ``state`` provides aggregeration on shard state   |
-|                        | - ``relocating`` tracks which shards are relocated  |
+|                        | - ``info`` descriminates shard relocation per table |
 +------------------------+-----------------------------------------------------+
 | ``\sysinfo``           | Query the ``sys`` tables for system and cluster     |
 |                        | information.                                        |
