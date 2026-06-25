@@ -5,11 +5,8 @@ Changes for crash
 Unreleased
 ==========
 
-- Added ``\shards`` to show shard relocation progress. With optional arguments
-  ``state`` and ``relocating``.
+- Added ``\shards`` to show shard relocation progress. With optional argument ``info``.
 
-- Added ``\shards`` to show shard relocation progress. With optinal arguments
-  ``state`` and ``relocating``.
 
 2026/02/09 0.32.0
 =================
