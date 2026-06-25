@@ -945,7 +945,7 @@ class ShardsCommandWithContentTest(TestCase):
                 self.assertEqual(header(expected), header(output_lines))
 
 
-    def test_shards_command_ouput_info(self):
+    def test_shards_command_output_info(self):
         expected = [
             '+-------------+------------+-----------------+--------------+------------+-------------------+-----------------+-------------------+',
             '| schema_name | table_name | partition_ident | total_shards | total_size | relocating_shards | relocating_size | relocated_percent |',
