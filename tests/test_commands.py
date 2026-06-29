@@ -284,7 +284,21 @@ class ShardsCommandTest(TestCase):
         cmd.pprint.assert_called_with(rows, [c[0] for c in cols])
 
     @patch('crate.crash.command.CrateShell')
-    def test_shards_command_info(self,cmd):
+    def test_shards_command_overview(self,cmd):
+        rows = [
+            ['RELOCATING','FALSE','2','33334465','9.307963063940406'],
+            ['STARTED','TRUE','1010','166665535','26.309150873683393'],
+        ]
+        cols = [('state', ), ('primary',), ('shard_count', ), ('num_docs', ), ('size_gb', )]
+        cmd._exec.return_value = True
+        cmd.cursor.fetchall.return_value = rows
+        cmd.cursor.description = cols
+
+        ShardsCommand()(cmd, "overview")
+        cmd.pprint.assert_called_with(rows, [c[0] for c in cols])
+
+    @patch('crate.crash.command.CrateShell')
+    def test_shards_command_per_table(self,cmd):
         rows = [
             ['doc','table1','','1','10','1024','0','100.0'],
             ['doc','table2','','2','20','2048','1','50.0'],
@@ -295,7 +309,7 @@ class ShardsCommandTest(TestCase):
         cmd.cursor.fetchall.return_value = rows
         cmd.cursor.description = cols
 
-        ShardsCommand()(cmd, "info")
+        ShardsCommand()(cmd, "per-table")
         cmd.pprint.assert_called_with(rows, [c[0] for c in cols])
 
 
@@ -307,10 +321,10 @@ class ShardsCommandTest(TestCase):
         cmd.logger.info.assert_not_called()
 
     @patch('crate.crash.command.CrateShell')
-    def test_shards_command_info_none(self,cmd):
+    def test_shards_command_per_table_none(self,cmd):
         cmd._exec.return_value = True
         cmd.cursor.fetchall.return_value = []
-        ShardsCommand()(cmd,"info")
+        ShardsCommand()(cmd,"per-table")
         cmd.logger.info.assert_not_called()
 
 

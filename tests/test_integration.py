@@ -890,7 +890,21 @@ class ShardsCommandEmptyDBTest(TestCase):
                 self.assertEqual(None, text)
                 self.assertEqual(expected, output.getvalue())
 
-    def test_shards_command_output_info(self):
+    def test_shards_command_output_overview(self):
+        expected = '\n'.join([
+            '+-------+---------+-------------+----------+---------+',
+            '| state | primary | shard_count | num_docs | size_gb |',
+            '+-------+---------+-------------+----------+---------+',
+            '+-------+---------+-------------+----------+---------+\n',
+        ])
+        with CrateShell(crate_hosts=[node.http_url], is_tty=False) as cmd:
+            shards_ = cmd.commands['shards']
+            with patch('sys.stdout', new_callable=StringIO) as output:
+                text = shards_(cmd, "overview")
+                self.assertEqual(None, text)
+                self.assertEqual(expected, output.getvalue())
+
+    def test_shards_command_output_per_table(self):
         expected = '\n'.join([
             '+-------------+------------+-----------------+--------------+------------+-------------------+-----------------+-------------------+',
             '| schema_name | table_name | partition_ident | total_shards | total_size | relocating_shards | relocating_size | relocated_percent |',
@@ -900,7 +914,7 @@ class ShardsCommandEmptyDBTest(TestCase):
         with CrateShell(crate_hosts=[node.http_url], is_tty=False) as cmd:
             shards_ = cmd.commands['shards']
             with patch('sys.stdout', new_callable=StringIO) as output:
-                text = shards_(cmd, 'info')
+                text = shards_(cmd, 'per-table')
                 self.assertEqual(None, text)
                 self.assertEqual(expected, output.getvalue())
 
@@ -912,7 +926,7 @@ class ShardsCommandEmptyDBTest(TestCase):
                 cmd.logger = ColorPrinter(False, stream=output)
                 text = shards_(cmd, 'arg1', 'arg2')
                 self.assertEqual(None, text)
-                self.assertEqual('Command argument not supported (available options: `info`).\n', output.getvalue())
+                self.assertEqual('Command argument not supported (available options: `overview`, `per-table`).\n', output.getvalue())
 
 
 
@@ -945,7 +959,7 @@ class ShardsCommandWithContentTest(TestCase):
                 self.assertEqual(header(expected), header(output_lines))
 
 
-    def test_shards_command_output_info(self):
+    def test_shards_command_output_per_table(self):
         expected = [
             '+-------------+------------+-----------------+--------------+------------+-------------------+-----------------+-------------------+',
             '| schema_name | table_name | partition_ident | total_shards | total_size | relocating_shards | relocating_size | relocated_percent |',
@@ -956,7 +970,7 @@ class ShardsCommandWithContentTest(TestCase):
         with CrateShell(crate_hosts=[node.http_url], is_tty=False) as cmd:
             shards_ = cmd.commands['shards']
             with patch('sys.stdout', new_callable=StringIO) as output:
-                text = shards_(cmd, 'info')
+                text = shards_(cmd, 'per-table')
                 self.assertEqual(None, text)
                 output_lines = output.getvalue().splitlines()
                 self.assertEqual(len(expected), len(output_lines))

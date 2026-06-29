@@ -235,9 +235,9 @@ class CheckCommand(Command):
 
 
 class ShardsCommand(Command):
-    """shows shards state, optionally per table, e.g. \\shards info"""
+    """shows shards overview, optionally per table, e.g. \\shards info"""
 
-    DEFAULT_STMT = """
+    OVERVIEW_STMT = """
         SELECT
             state,
             primary,
@@ -274,7 +274,8 @@ class ShardsCommand(Command):
     """
 
     OPTIONS = {
-        "info": INFO_STMT,
+        "overview": OVERVIEW_STMT,
+        "per-table": INFO_STMT,
     }
 
     def complete(self, cmd, text):
@@ -294,7 +295,7 @@ class ShardsCommand(Command):
 
     def __call__(self, cmd, *args, **kwargs):
         if len(args) == 0:
-            self.execute(cmd, self.DEFAULT_STMT)
+            self.execute(cmd, self.OVERVIEW_STMT)
             return
 
         stmt = self.OPTIONS.get(args[0].strip())
